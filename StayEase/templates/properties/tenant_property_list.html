@@ -1,0 +1,59 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block dashboard_content %}
+
+<div class="tenant-explore-wrapper">
+
+    <div class="tenant-explore-header">
+        <h1>Available Properties</h1>
+        <p>Explore active listings</p>
+    </div>
+
+    <div class="tenant-explore-grid">
+
+        {% for item in property_data %}
+        <div class="tenant-explore-card">
+
+            <div class="tenant-explore-content">
+                <h3 class="tenant-explore-title">
+                    {{ item.property.name }}
+                </h3>
+
+                <p class="tenant-explore-location">
+                    {{ item.property.city }}, {{ item.property.state }}
+                </p>
+
+                <p class="tenant-explore-rooms">
+                    <span class="owner-label">Owner:</span> 
+                    {{ item.property.owner.first_name }}
+                    {{ item.property.owner.last_name }}
+                </p>
+
+                <p class="tenant-explore-rooms">
+                    Total Rooms: {{ item.room_count }}
+                </p>
+
+                <p class="tenant-explore-price">
+                    {% if item.min_rent %}
+                        Starting from ₹ {{ item.min_rent }}
+                    {% else %}
+                        Rooms not added yet
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="tenant-explore-action">
+                <a href="{% url 'tenant_property_detail' item.property.id %}"
+                   class="tenant-explore-btn">
+                   View Rooms
+                </a>
+            </div>
+
+        </div>
+        {% empty %}
+            <p>No properties available.</p>
+        {% endfor %}
+
+    </div>
+
+</div>
+{% endblock %}

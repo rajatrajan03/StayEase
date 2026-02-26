@@ -1,0 +1,312 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>
+            Find Your Perfect Stay,<br>
+            <span>Anywhere</span>
+        </h1>
+
+        <p>
+            Comfortable, Verified & Affordable Spaces for students,
+            professionals, and travelers.
+        </p>
+
+        <div class="search-box">
+            <input type="text" placeholder="Where are you">
+            <div class="divider"></div>
+            <input type="date">
+            <div class="divider"></div>
+            <select>
+                <option>Property Type</option>
+                <option>PG</option>
+                <option>Hostel</option>
+                <option>Apartment</option>
+            </select>
+            <button class="search-btn">Search</button>
+        </div>
+    </div>
+</section>
+
+
+<!-- CATEGORIES -->
+<section class="categories">
+    <div class="categories-container">
+
+        <div class="category-card pg">
+            <div class="icon">🏠</div>
+            <h3>PG</h3>
+            <p>250+ Listings</p>
+        </div>
+
+        <div class="category-card hostel">
+            <div class="icon">🏢</div>
+            <h3>Hostel</h3>
+            <p>180+ Listings</p>
+        </div>
+
+        <div class="category-card apartment">
+            <div class="icon">🏬</div>
+            <h3>Apartment</h3>
+            <p>120+ Listings</p>
+        </div>
+
+        <div class="category-card shared">
+            <div class="icon">👥</div>
+            <h3>Shared Room</h3>
+            <p>300+ Listings</p>
+        </div>
+
+        <div class="category-card corporate">
+            <div class="icon">💼</div>
+            <h3>Corporate Stay</h3>
+            <p>85+ Listings</p>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- FEATURED -->
+<section class="featured">
+    <div class="featured-top">
+        <div>
+            <h2>Featured Properties</h2>
+            <p class="featured-sub">Handpicked stays for maximum comfort and style.</p>
+        </div>
+        <a href="#">View All →</a>
+    </div>
+
+    <div class="property-grid">
+
+        <!-- CARD 1 -->
+        <div class="property-card">
+            <div class="property-img">
+                <span class="category-tag">Hostel</span>
+                <span class="verified-tag">✔ Verified</span>
+                <img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511" alt="">
+            </div>
+
+            <div class="property-content">
+                <div class="title-rating">
+                    <h3>Modern Student Hostel</h3>
+                    <span class="rating">⭐ 4.8</span>
+                </div>
+                <p class="location">Near Central University, Downtown</p>
+
+                <div class="bottom-row">
+                    <div class="price">
+                        <span class="amount">$450</span>
+                        <span class="month">/month</span>
+                    </div>
+                    <button class="view-btn">View Details</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 2 -->
+        <div class="property-card">
+            <div class="property-img">
+                <span class="category-tag">Apartment</span>
+                <span class="verified-tag">✔ Verified</span>
+                <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2" alt="">
+            </div>
+
+            <div class="property-content">
+                <div class="title-rating">
+                    <h3>Luxury Serviced Apartment</h3>
+                    <span class="rating">⭐ 4.9</span>
+                </div>
+                <p class="location">Tech Hub, North Plaza</p>
+
+                <div class="bottom-row">
+                    <div class="price">
+                        <span class="amount">$1200</span>
+                        <span class="month">/month</span>
+                    </div>
+                    <button class="view-btn">View Details</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 3 -->
+        <div class="property-card">
+            <div class="property-img">
+                <span class="category-tag">PG</span>
+                <span class="verified-tag">✔ Verified</span>
+                <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688" alt="">
+            </div>
+
+            <div class="property-content">
+                <div class="title-rating">
+                    <h3>Premium PG Stay</h3>
+                    <span class="rating">⭐ 4.6</span>
+                </div>
+                <p class="location">Business District, South Wing</p>
+
+                <div class="bottom-row">
+                    <div class="price">
+                        <span class="amount">$600</span>
+                        <span class="month">/month</span>
+                    </div>
+                    <button class="view-btn">View Details</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ================= WHY CHOOSE ================= -->
+
+<section class="why">
+    <div class="why-header">
+        <h2>Why Choose StayEase?</h2>
+        <p>We redefine the way you look for a second home with trust and transparency.</p>
+    </div>
+
+    <div class="why-grid">
+
+        <div class="why-card">
+            <div class="why-icon">🛡️</div>
+            <h3>Verified Listings</h3>
+            <p>Every property is physically verified by our team for safety and comfort.</p>
+        </div>
+
+        <div class="why-card">
+            <div class="why-icon">💳</div>
+            <h3>Secure Payments</h3>
+            <p>End-to-end encrypted payments with multiple safe payment options.</p>
+        </div>
+
+        <div class="why-card">
+            <div class="why-icon">🎧</div>
+            <h3>24/7 Support</h3>
+            <p>Our dedicated support team is always available to assist with your stay.</p>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ================= TESTIMONIALS ================= -->
+
+<section class="testimonials">
+    <h2>Loved by 10,000+ Happy Residents</h2>
+
+    <div class="testimonial-grid">
+
+        <div class="testimonial-card">
+            <p>
+                "Finding a PG near my new office was so stressful until I found StayEase.
+                The booking was seamless and the property was exactly as shown."
+            </p>
+            <div class="testimonial-user">
+                <img src="https://randomuser.me/api/portraits/women/44.jpg">
+                <div>
+                    <h4>Sarah Jenkins</h4>
+                    <span>Software Engineer</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="testimonial-card">
+            <p>
+                "As an international student, trust was my biggest concern.
+                StayEase’s verified listings gave me the peace of mind I needed."
+            </p>
+            <div class="testimonial-user">
+                <img src="https://randomuser.me/api/portraits/men/46.jpg">
+                <div>
+                    <h4>Michael Chen</h4>
+                    <span>Graduate Student</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ================= CTA SECTION ================= -->
+
+<section class="cta">
+    <div class="cta-content">
+        <h2>Ready to find your next home?</h2>
+        <p>
+            Join thousands of students and professionals who found their
+            perfect stay through StayEase.
+        </p>
+
+        <div class="cta-buttons">
+            <a href="#" class="btn-light">Explore Listings</a>
+            <a href="#" class="btn-dark">List Your Property</a>
+        </div>
+    </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+    <div class="footer-container">
+
+        <!-- LEFT -->
+        <div class="footer-col">
+            <div class="footer-logo">
+                <div class="logo-icon">S</div>
+                <h3>StayEase</h3>
+            </div>
+            <p>
+                The most trusted platform to find and book your perfect stay.
+                Verified properties, easy bookings, and 24/7 support.
+            </p>
+
+            <div class="social-icons">
+                <div>📷</div>
+                <div>🐦</div>
+                <div>📘</div>
+            </div>
+        </div>
+
+        <!-- QUICK LINKS -->
+        <div class="footer-col">
+            <h4>Quick Links</h4>
+            <a href="#">Search Stays</a>
+            <a href="#">Browse Categories</a>
+            <a href="#">List Your Property</a>
+            <a href="#">My Account</a>
+        </div>
+
+        <!-- SUPPORT -->
+        <div class="footer-col">
+            <h4>Support</h4>
+            <a href="#">Help Center</a>
+            <a href="#">Safety Information</a>
+            <a href="#">Cancellation Options</a>
+        </div>
+
+        <!-- CONTACT -->
+        <div class="footer-col">
+            <h4>Contact Us</h4>
+            <p>📞 +91 8924032193</p>
+            <p>✉ support@stayease.com</p>
+            <p>📍 69, Whiteganj Hardoi</p>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2026 StayEase. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Cookies</a>
+        </div>
+    </div>
+</footer>
+
+
+
+{% endblock %}

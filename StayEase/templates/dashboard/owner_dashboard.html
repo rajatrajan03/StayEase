@@ -1,0 +1,113 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block dashboard_content %}
+
+<!-- ================= HEADER SECTION ================= -->
+<div class="page-header">
+    <div>
+        <h1>Dashboard Overview</h1>
+        <p>Welcome back, {{ request.user.first_name }} 👋</p>
+    </div>
+</div>
+
+
+<!-- ================= STATS SUMMARY SECTION ================= -->
+<section class="dashboard-section">
+    <h2 class="section-title">Performance Summary</h2>
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <span>Total Properties</span>
+            <h3>{{ total_properties }}</h3>
+        </div>
+
+        <div class="stat-card">
+            <span>Total Bookings</span>
+            <h3>{{ total_bookings }}</h3>
+        </div>
+
+        <div class="stat-card">
+            <span>Total Earnings</span>
+            <h3>₹ {{ total_earnings }}</h3>
+        </div>
+
+        <div class="stat-card">
+            <span>Active Listings</span>
+            <h3>{{ active_listings }}</h3>
+        </div>
+
+    </div>
+</section>
+
+<!-- ================= QUICK ACTIONS ================= -->
+<section class="dashboard-section">
+    <h2 class="section-title">Quick Actions</h2>
+
+    <div class="action-buttons">
+
+        <!-- Add Property -->
+        <a href="/properties/add/"
+           class="{% if pending_count == 0 %}highlight-add{% else %}primary-btn{% endif %}">
+            + Add Property
+        </a>
+
+        <!-- Approve Pending -->
+        <a href="/bookings/?status=pending"
+           class="secondary-btn {% if pending_count > 0 %}alert-btn{% endif %}">
+            Approve Pending Bookings
+            {% if pending_count > 0 %}
+                ({{ pending_count }})
+            {% endif %}
+        </a>
+
+    </div>
+</section>
+
+<!-- ================= RECENT BOOKINGS TABLE ================= -->
+<section class="dashboard-section">
+    <h2 class="section-title">Recent Bookings</h2>
+
+    <div class="dashboard-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Tenant</th>
+                    <th>Property</th>
+                    <th>Move In</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in recent_bookings %}
+                <tr>
+                    <td>{{ booking.tenant.email }}</td>
+
+                    <td>
+                        {{ booking.room.property.name }}
+                        (Room {{ booking.room.room_number }})
+                    </td>
+
+                    <td>{{ booking.move_in_date|date:"d M Y" }}</td>
+
+                    <td>₹ {{ booking.rent_amount }}</td>
+
+                    <td>
+                        <span class="status-badge {{ booking.status }}">
+                            {{ booking.status|title }}
+                        </span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align:center;">
+                        No bookings yet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

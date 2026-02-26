@@ -1,0 +1,92 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block dashboard_content %}
+
+<div class="page-header">
+    <div>
+        <h1>Add Room</h1>
+        <p>{{ property.name }} — Create a new room</p>
+    </div>
+</div>
+
+<section class="dashboard-section">
+
+    <div class="dashboard-form-card">
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Room Number</label>
+                {{ form.room_number }}
+            </div>
+
+            <!-- Monthly Rent -->
+            <div class="form-group">
+                <label>Monthly Rent</label>
+                <div class="input-with-prefix">
+                    <span class="prefix">₹</span>
+                    {{ form.rent }}
+                </div>
+            </div>
+
+            <!-- Capacity -->
+            <div class="form-group">
+                <label>Capacity</label>
+                <div class="input-with-icon">
+                    <span class="icon">👥</span>
+                    {{ form.capacity }}
+                </div>
+            </div>
+
+            <!-- Room Image -->
+            <div class="form-group">
+                <label>Room Image</label>
+
+                <div class="image-preview-container">
+                    <img id="roomPreview" style="display:none;">
+                </div>
+
+                <input type="file"
+                    name="image"
+                    class="custom-file-input"
+                    onchange="previewRoomImage(event)">
+            </div>
+
+            <!-- Availability Toggle -->
+            <!-- Availability -->
+                <div class="form-group toggle-group">
+                    <label class="switch">
+                        {{ form.is_available }}
+                        <span class="slider"></span>
+                    </label>
+                    <span class="toggle-text">Available</span>
+                </div>
+                
+                <div class="form-actions">
+                <a href="{% url 'property_list' %}" class="cancel-btn">
+                    Cancel
+                </a>
+
+                <button type="submit" class="save-room-btn">
+                    Save Room
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+<script>
+function previewRoomImage(event) {
+    const reader = new FileReader();
+    reader.onload = function() {
+        const output = document.getElementById("roomPreview");
+        output.src = reader.result;
+        output.style.display = "block";
+    };
+    reader.readAsDataURL(event.target.files[0]);
+}
+</script>
+{% endblock %}

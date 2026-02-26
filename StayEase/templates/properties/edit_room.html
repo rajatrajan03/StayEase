@@ -1,0 +1,56 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block dashboard_content %}
+
+<div class="form-container">
+
+    <h2>Edit Room {{ room.room_number }}</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Room Number</label>
+            <input type="text" name="room_number" value="{{ room.room_number }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Rent</label>
+            <input type="number" name="rent" value="{{ room.rent }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Capacity</label>
+            <input type="number" name="capacity" value="{{ room.capacity }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Description</label>
+            <textarea name="description">{{ room.description }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Current Image</label><br>
+            {% if room.image %}
+                <img src="{{ room.image.url }}" width="200" style="border-radius:8px;">
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label>Change Image</label>
+            <input type="file" name="image">
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="primary-btn">
+                Update Room
+            </button>
+
+            <a href="{% url 'property_detail' room.property.id %}" class="secondary-btn">
+                Cancel
+            </a>
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}

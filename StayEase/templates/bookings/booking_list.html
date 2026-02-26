@@ -1,0 +1,128 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block dashboard_content %}
+
+<div class="page-header">
+    <div>
+        <h1>All Booking Requests</h1>
+        <p>Manage and review tenant bookings</p>
+    </div>
+</div>
+
+
+<!-- ================= STATS CARDS ================= -->
+<div class="stats-grid">
+
+    <div class="stat-card">
+        <h4>Total Earnings</h4>
+        <p>₹{{ total_earnings }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h4>Total Bookings</h4>
+        <p>{{ total_bookings }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h4>Pending</h4>
+        <p>{{ pending_count }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h4>Confirmed</h4>
+        <p>{{ confirmed_count }}</p>
+    </div>
+
+</div>
+
+
+<!-- ================= BOOKINGS TABLE ================= -->
+<section class="dashboard-section">
+
+    <div class="table-wrapper">
+
+        <table class="booking-table">
+
+            <thead>
+                <tr>
+                    <th>Room</th>
+                    <th>Seats</th>  
+                    <th>Tenant</th>
+                    <th>Move-In</th>
+                    <th>Rent</th>
+                    <th>Security</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for booking in bookings %}
+                <tr>
+
+                    <td>{{ booking.room.room_number }}</td>
+
+                    <!-- Seats Information -->
+                    <td>
+                        <strong>
+                            {{ booking.room_confirmed }} / {{ booking.room.capacity }}
+                        </strong>
+                        <br>
+                        <small>
+                            {% if booking.room_available > 0 %}
+                                {{ booking.room_available }} seats left
+                            {% else %}
+                                <span style="color:red;">Room Full</span>
+                            {% endif %}
+                        </small>
+                    </td>
+
+                    <td>{{ booking.tenant.email }}</td>
+                    <td>{{ booking.move_in_date }}</td>
+                    <td>₹{{ booking.rent_amount }}</td>
+                    <td>₹{{ booking.security_amount }}</td>
+                    <td><strong>₹{{ booking.total_amount }}</strong></td>
+
+                    <td>
+                        {% if booking.status == "pending" %}
+                            <span class="badge pending">Pending</span>
+                        {% elif booking.status == "confirmed" %}
+                            <span class="badge confirmed">Confirmed</span>
+                        {% else %}
+                            <span class="badge cancelled">Cancelled</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if booking.status == "pending" %}
+                            <a href="{% url 'update_booking_status' booking.id 'confirmed' %}" class="btn confirm-btn">
+                                Confirm
+                            </a>
+
+                            <a href="{% url 'update_booking_status' booking.id 'cancelled' %}" class="btn cancel-btn">
+                                Cancel
+                            </a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+
+                </tr>
+
+                {% empty %}
+                <tr>
+                    <td colspan="9" class="empty-state">
+                        📭 No bookings received yet.
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+{% endblock %}

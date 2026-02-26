@@ -1,0 +1,260 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block dashboard_content %}
+
+<div class="settings-wrapper">
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <h2 class="settings-title">Account Settings</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- ================= Personal Information ================= -->
+        <div class="settings-card">
+            <h3>Personal Information</h3>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" name="first_name"
+                           value="{{ request.user.first_name }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" name="last_name"
+                           value="{{ request.user.last_name }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email"
+                           value="{{ request.user.email }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="text" name="phone"
+                           value="{{ profile.phone }}">
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= Profile Photo ================= -->
+        <div class="settings-card">
+            <h3>Profile Photo</h3>
+
+            <div class="photo-section">
+                <div class="photo-preview">
+                    {% if profile.profile_image %}
+                        <img id="previewImage"
+                             src="{{ profile.profile_image.url }}"
+                             alt="Profile Image">
+                    {% else %}
+                        <span id="previewLetter">
+                            {{ request.user.first_name|first|upper }}
+                        </span>
+                        <img id="previewImage" style="display:none;">
+                    {% endif %}
+                </div>
+
+                <div class="photo-buttons">
+                    {% if profile.profile_image %}
+                        <a href="{{ profile.profile_image.url }}" 
+                           target="_blank"
+                           class="view-btn">
+                            View Photo
+                        </a>
+                    {% endif %}
+
+                    <label class="upload-btn">
+                        Upload New Photo
+                        <input type="file"
+                               name="profile_image"
+                               accept="image/*"
+                               onchange="previewProfileImage(event)"
+                               hidden>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= Security ================= -->
+        <div class="settings-card">
+            <h3>Security</h3>
+
+            <div class="security-item">
+                <div>
+                    <strong>Password</strong>
+                    <p class="security-desc">
+                        Update your account password regularly to keep it secure.
+                    </p>
+                </div>
+
+                <button type="button" class="security-btn" onclick="togglePasswordForm()">
+                    Change Password
+                </button>
+            </div>
+
+            <!-- Hidden Password Form -->
+            <div id="passwordForm" class="password-form">
+
+                <div class="form-group password-wrapper">
+                    <label>Old Password</label>
+                    <div class="password-field">
+                        <input type="password" name="old_password" id="oldPassword">
+                        <span class="toggle-eye" onclick="togglePassword('oldPassword', this)">👁</span>
+                    </div>
+                </div>
+
+                <div class="form-group password-wrapper">
+                    <label>New Password</label>
+                    <div class="password-field">
+                        <input type="password" name="new_password" id="newPassword">
+                        <span class="toggle-eye" onclick="togglePassword('newPassword', this)">👁</span>
+                    </div>
+                </div>
+
+                <div class="form-group password-wrapper">
+                    <label>Confirm Password</label>
+                    <div class="password-field">
+                        <input type="password" name="confirm_password" id="confirmPassword">
+                        <span class="toggle-eye" onclick="togglePassword('confirmPassword', this)">👁</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="save-btn">
+                    Update Password
+                </button>
+            </div>
+
+            <hr class="security-divider">
+
+            <div class="security-item">
+                <div>
+                    <strong>Two-Factor Authentication</strong>
+                    <p class="security-desc">
+                        Add an extra layer of security to your account.
+                    </p>
+                </div>
+
+                <button type="button" class="disabled-btn">
+                    Coming Soon
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= Danger Zone ================= -->
+        <div class="settings-card danger-zone">
+            <h3>Danger Zone</h3>
+
+            <div class="danger-item">
+                <span>Deactivate Account</span>
+                <button type="button" class="danger-btn" onclick="openDeactivateModal()">
+                    Deactivate
+                </button>
+            </div>
+        </div>
+
+        <div id="deactivateModal" class="modal-overlay">
+            <div class="modal-box">
+                <h3>Are you sure?</h3>
+                <p>This action will deactivate your account.</p>
+
+                <div class="modal-actions">
+                    <button onclick="closeDeactivateModal()" class="cancel-btn">
+                        Cancel
+                    </button>
+                    <button type="button" class="confirm-danger-btn" onclick="fakeDeactivate()">
+                        Yes, Deactivate
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-action">
+            <button type="submit" class="save-btn">
+                Save Changes
+            </button>
+        </div>
+
+    </form>
+</div>
+
+<script>
+function previewProfileImage(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const previewImg = document.getElementById("previewImage");
+        const previewLetter = document.getElementById("previewLetter");
+
+        previewImg.src = e.target.result;
+        previewImg.style.display = "block";
+        if (previewLetter) previewLetter.style.display = "none";
+    };
+    reader.readAsDataURL(file);
+}
+
+function togglePasswordForm() {
+    const form = document.getElementById("passwordForm");
+    const btn = document.querySelector(".security-btn");
+
+    form.classList.toggle("active");
+
+    if (form.classList.contains("active")) {
+        btn.innerText = "Cancel";
+    } else {
+        btn.innerText = "Change Password";
+    }
+}
+
+function togglePassword(fieldId, element) {
+    const input = document.getElementById(fieldId);
+    if (input.type === "password") {
+        input.type = "text";
+        element.innerText = "🙈";
+    } else {
+        input.type = "password";
+        element.innerText = "👁";
+    }
+}
+
+function openDeactivateModal() {
+    document.getElementById("deactivateModal").style.display = "flex";
+}
+
+function closeDeactivateModal() {
+    document.getElementById("deactivateModal").style.display = "none";
+}
+
+function fakeDeactivate() {
+    closeDeactivateModal();
+    showToast("We are having some issue. Please try again later.");
+}
+
+function showToast(message) {
+    const toast = document.createElement("div");
+    toast.className = "toast-message";
+    toast.innerText = message;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.classList.add("show"), 100);
+    setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+</script>
+
+{% endblock %}

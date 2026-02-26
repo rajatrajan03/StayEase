@@ -1,0 +1,118 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block dashboard_content %}
+
+<div class="page-header">
+    <div>
+        <h1>Your Properties</h1>
+        <p>Manage your rental listings</p>
+    </div>
+    <a href="{% url 'add_property' %}" class="primary-btn">
+        + Add Property
+    </a>
+</div>
+
+
+<!-- ================= ACTIVE PROPERTIES ================= -->
+<section class="dashboard-section">
+    <h2 class="section-title">Active Properties</h2>
+
+    {% for item in property_data %}
+        {% if item.property.is_active %}
+
+        <div class="property-card">
+
+            <div class="property-left">
+                <div class="property-icon">
+                    🏠
+                </div>
+
+                <div class="card-content">
+
+                    <h3>
+                        <a href="{% url 'property_detail' item.property.id %}">
+                            {{ item.property.name }}
+                        </a>
+                    </h3>
+
+                    {% if item.property.city and item.property.state %}
+                        <p class="location">
+                            📍 {{ item.property.city }}, {{ item.property.state }}
+                        </p>
+                    {% else %}
+                        <p class="muted-text">Location not added</p>
+                    {% endif %}
+
+                    {% if item.min_rent %}
+                        <p class="rent">Starting from ₹ {{ item.min_rent }}</p>
+                        <p class="rooms">🛏 {{ item.room_count }} Rooms</p>
+                    {% else %}
+                        <p class="muted-text">No rooms added yet</p>
+                    {% endif %}
+
+                </div>
+            </div>
+
+            <div class="property-actions">
+                <a href="{% url 'edit_property' item.property.id %}" class="btn edit-btn">
+                    Edit
+                </a>
+
+                <a href="{% url 'archive_property' item.property.id %}" class="btn archive-btn">
+                    Archive
+                </a>
+
+                <a href="{% url 'add_room' item.property.id %}" class="btn add-room-btn">
+                    + Add Room
+                </a>
+            </div>
+
+        </div>
+
+        {% endif %}
+    {% empty %}
+        <p class="muted-text">No active properties.</p>
+    {% endfor %}
+</section>
+
+<!-- ================= ARCHIVED PROPERTIES ================= -->
+<section class="dashboard-section">
+    <h2 class="section-title">Archived Properties</h2>
+
+    {% for item in property_data %}
+        {% if not item.property.is_active %}
+
+        <div class="property-card archived">
+
+            <div class="property-left">
+                <div class="property-icon">
+                    🏠
+                </div>
+
+                <div class="card-content">
+                    <h3>{{ item.property.name }}</h3>
+
+                    {% if item.property.city and item.property.state %}
+                        <p class="location">
+                            📍 {{ item.property.city }}, {{ item.property.state }}
+                        </p>
+                    {% else %}
+                        <p class="muted-text">Location not added</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="property-actions">
+                <a href="{% url 'restore_property' item.property.id %}" class="btn restore-btn">
+                    Restore
+                </a>
+            </div>
+
+        </div>
+
+        {% endif %}
+    {% empty %}
+        <p class="muted-text">No archived properties.</p>
+    {% endfor %}
+</section>
+
+{% endblock %}

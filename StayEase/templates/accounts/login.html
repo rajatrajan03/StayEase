@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+{% load socialaccount %}
+{% block content %}
+
+<div class="auth-wrapper">
+    <div class="auth-logo">
+        <div class="logo-icon">S</div>
+        <span>StayEase</span>
+    </div>
+
+    <div class="auth-card">
+        <h2>Welcome Back</h2>
+        <p class="subtitle">Log in to your StayEase account</p>
+        {% if messages %}
+            {% for message in messages %}
+                <div style="color:red; margin-bottom:15px;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="field">
+                <label>Email Address</label>
+                <input type="email" name="email" placeholder="name@company.com" required>
+            </div>
+            
+            <div class="field">
+                <div class="label-row">
+                    <label>Password</label>
+                    <a href="{% url 'forgot_password' %}">Forgot Password?</a>
+                </div>
+                <input type="password" name="password" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="primary-btn">
+                Login →
+            </button>
+        </form>
+
+        <div class="auth-divider">
+            <span>OR CONTINUE WITH</span>
+        </div>
+
+        <div class="social-row">
+            <a href="{% provider_login_url 'google' %}" class="social-btn">
+                Continue with Google
+            </a>
+        </div>
+
+        <p class="bottom-text">
+            Don't have an account?
+            <a href="{% url 'signup' %}">Sign up for free</a>
+        </p>
+
+    </div>
+</div>
+{% endblock %}

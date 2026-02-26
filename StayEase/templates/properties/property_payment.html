@@ -1,0 +1,14 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block dashboard_content %}
+
+<h1>Complete Payment</h1>
+<p>To activate <strong>{{ property.name }}</strong>, pay ₹1000 listing fee.</p>
+
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit" class="primary-btn">
+        Pay ₹1000 & Activate
+    </button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+{% load socialaccount %}
+
+<div class="auth-page">
+    <div class="auth-logo">
+        <div class="logo-icon">S</div>
+        <span>StayEase</span>
+    </div>
+
+    <div class="auth-card">
+        <h2>Create Account</h2>
+        <p class="subtitle">Join 10,00+ residents today</p>
+        {% if messages %}
+            {% for message in messages %}
+                <div style="color:red;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" action="{% url 'signup' %}">
+            {% csrf_token %}
+
+            <div class="row">
+                <div class="field">
+                    <label>FULL NAME</label>
+                    <input type="text" name="full_name" placeholder="Your Name" required>
+                </div>
+
+                <div class="field">
+                    <label>PHONE NUMBER</label>
+                    <input type="text" name="phone" placeholder="+91 9118181818" required>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>EMAIL ADDRESS</label>
+                <input type="email" name="email" placeholder="name@company.com" required>
+            </div>
+
+            <div class="field">
+                <label>PASSWORD</label>
+                <input type="password" name="password" placeholder="••••••••" required>
+            </div>
+            
+            <div class="role-row">
+                <label for="role">Select Role :</label>
+                <select name="role" id="role" required>
+                    <option value="tenant">Tenant</option>
+                    <option value="owner">Owner</option>
+                </select>
+            </div>
+
+            <div class="terms-row">
+                <label class="terms-label">
+                    <input type="checkbox" name="agree_terms" required>
+                    I agree to the 
+                    <a href="{% url 'terms' %}">Terms of Service</a>
+                    and 
+                    <a href="{% url 'privacy' %}">Privacy Policy</a>
+                </label>
+            </div>
+
+            <button type="submit" class="create-btn">
+                Create Account →
+            </button>
+            
+        </form>
+
+        <div class="auth-divider">
+            OR SIGN UP WITH
+        </div>
+
+
+        <div class="social">
+            <a href="{% provider_login_url 'google' %}" class="social-btn">
+                Google
+            </a>
+        </div>
+
+
+        <p class="login-link">
+            Already have an account?
+            <a href="{% url 'login' %}">Log in here</a>
+        </p>
+
+    </div>
+</div>
+{% endblock %}

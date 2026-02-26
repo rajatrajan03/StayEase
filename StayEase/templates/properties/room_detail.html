@@ -1,0 +1,95 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block dashboard_content %}
+
+<div style="max-width:1200px; margin:auto; padding:40px 30px;">
+
+    <div style="display:flex; gap:50px; flex-wrap:wrap; align-items:flex-start;">
+
+        <!-- LEFT: IMAGE SECTION -->
+        <div style="flex:1.2; min-width:400px;">
+
+            {% if room.image %}
+                <img src="{{ room.image.url }}"
+                     id="roomImage"
+                     style="width:100%;
+                            height:500px;
+                            object-fit:cover;
+                            border-radius:18px;
+                            cursor:pointer;
+                            transition:0.3s;
+                            box-shadow:0 20px 40px rgba(0,0,0,0.15);">
+            {% else %}
+                <div style="height:500px;
+                            background:#f1f5f9;
+                            border-radius:18px;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            font-size:18px;
+                            color:#64748b;">
+                    No Image Available
+                </div>
+            {% endif %}
+
+        </div>
+
+        <!-- RIGHT: DETAILS SECTION -->
+        <div style="flex:1; min-width:350px;">
+
+            <h1 style="font-size:34px; margin-bottom:15px;">
+                Room {{ room.room_number }}
+            </h1>
+
+            <div style="font-size:20px; margin-bottom:10px;">
+                <strong>Rent:</strong> ₹ {{ room.rent }}
+            </div>
+
+            <div style="font-size:18px; margin-bottom:8px;">
+                <strong>Capacity:</strong> {{ room.capacity }} persons
+            </div>
+
+            <div style="font-size:18px; margin-bottom:20px;">
+                <strong>Available Seats:</strong> {{ available_seats }}
+            </div>
+
+            <hr style="margin:25px 0;">
+
+            <h3 style="margin-bottom:12px;">Room Features</h3>
+
+            <ul style="line-height:32px; font-size:16px; padding-left:20px;">
+                <li>Spacious Layout</li>
+                <li>Natural Ventilation</li>
+                <li>Safe & Secure Environment</li>
+                <li>Clean & Maintained</li>
+            </ul>
+
+            {% if available_seats > 0 %}
+                <a href="{% url 'book_room' room.id %}"
+                   style="display:inline-block;
+                          margin-top:30px;
+                          padding:15px 36px;
+                          background:#2563eb;
+                          color:white;
+                          border-radius:12px;
+                          text-decoration:none;
+                          font-size:18px;
+                          font-weight:500;
+                          box-shadow:0 10px 25px rgba(37,99,235,0.4);
+                          transition:0.3s;">
+                   Book Now
+                </a>
+            {% else %}
+                <div style="margin-top:30px;
+                            color:#dc2626;
+                            font-weight:bold;
+                            font-size:20px;">
+                    Fully Booked
+                </div>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

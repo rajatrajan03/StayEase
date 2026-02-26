@@ -1,0 +1,170 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block dashboard_content %}
+
+<div class="page-header">
+    <div>
+        <h1>Add Property</h1>
+        <p>Create a new rental property listing</p>
+    </div>
+</div>
+
+<section class="dashboard-section">
+
+    <div class="dashboard-form-card">
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Property Name -->
+            <div class="form-group">
+                <label>
+                    Property Name
+                    {% if form.name.field.required %}
+                        <span class="required-star">*</span>
+                    {% endif %}
+                </label>
+                {{ form.name }}
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <label>Description</label>
+                {{ form.description }}
+            </div>
+
+            <!-- Address -->
+            <div class="form-group">
+                <label>
+                    Address
+                    {% if form.address.field.required %}
+                        <span class="required-star">*</span>
+                    {% endif %}
+                </label>
+                {{ form.address }}
+            </div>
+
+            <!-- City -->
+            <div class="form-group">
+                <label>
+                    City
+                    {% if form.city.field.required %}
+                        <span class="required-star">*</span>
+                    {% endif %}
+                </label>
+                {{ form.city }}
+            </div>
+
+            <!-- State -->
+            <div class="form-group">
+                <label>
+                    State
+                    {% if form.state.field.required %}
+                        <span class="required-star">*</span>
+                    {% endif %}
+                </label>
+                {{ form.state }}
+            </div>
+
+            <!-- Pincode -->
+            <div class="form-group">
+                <label>Pincode</label>
+                {{ form.pincode }}
+            </div>
+
+            <!-- Landmark -->
+            <div class="form-group">
+                <label>Nearby Landmark</label>
+                {{ form.landmark }}
+            </div>
+
+            <!-- Front Image -->
+            <div class="form-group">
+                <label>Front Image</label>
+
+                <div class="image-preview-container">
+                    {% if form.instance.main_image %}
+                        <img id="frontPreview"
+                            src="{{ form.instance.main_image.url }}"
+                            alt="Front Image">
+                    {% else %}
+                        <img id="frontPreview" style="display:none;">
+                    {% endif %}
+                </div>
+
+                <input type="file"
+                    name="main_image"
+                    class="custom-file-input"
+                    onchange="previewImage(event, 'frontPreview')">
+
+                <button type="button"
+                        class="remove-image-btn"
+                        onclick="removeImage('frontPreview', 'main_image')">
+                    Remove Image
+                </button>
+            </div>
+
+            <!-- Back Image -->
+            <div class="form-group">
+                <label>Back Image</label>
+
+                <div class="image-preview-container">
+                    {% if form.instance.back_image %}
+                        <img id="backPreview"
+                            src="{{ form.instance.back_image.url }}"
+                            alt="Back Image">
+                    {% else %}
+                        <img id="backPreview" style="display:none;">
+                    {% endif %}
+                </div>
+
+                <input type="file"
+                    name="back_image"
+                    class="custom-file-input"
+                    onchange="previewImage(event, 'backPreview')">
+
+                <button type="button"
+                        class="remove-image-btn"
+                        onclick="removeImage('backPreview', 'back_image')">
+                    Remove Image
+                </button>
+            </div>
+
+            <div class="form-actions">
+                <a href="/properties/" class="cancel-btn">Cancel</a>
+                <button type="submit" class="primary-btn">
+                    Save & Continue
+                </button>
+            </div>
+
+        </form>
+    </div>
+</section>
+
+<script>
+function previewImage(event, previewId) {
+    const reader = new FileReader();
+    reader.onload = function() {
+        const output = document.getElementById(previewId);
+        output.src = reader.result;
+        output.style.display = "block";
+    };
+    reader.readAsDataURL(event.target.files[0]);
+}
+
+function removeImage(previewId, inputName) {
+    const preview = document.getElementById(previewId);
+    preview.src = "";
+    preview.style.display = "none";
+
+    const fileInput = document.querySelector(`input[name="${inputName}"]`);
+    fileInput.value = "";
+
+    // Hidden field to tell Django to remove image
+    let removeField = document.createElement("input");
+    removeField.type = "hidden";
+    removeField.name = inputName + "_clear";
+    removeField.value = "on";
+    fileInput.form.appendChild(removeField);
+}
+</script>
+{% endblock %}

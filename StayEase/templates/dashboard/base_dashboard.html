@@ -1,0 +1,265 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>StayEase</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+
+    <style>
+        .popup-message {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: #2563eb;
+            color: white;
+            padding: 14px 22px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            font-weight: 500;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">StayEase</h2>
+
+        <nav>
+
+        <!-- Overview (Common) -->
+        <a href="/dashboard/" 
+        class="{% if request.path == '/dashboard/' %}active{% endif %}">
+        Overview
+        </a>
+
+        {% if request.user.userprofile.role == "owner" %}
+
+            <a href="/properties/" 
+            class="{% if '/properties/' in request.path %}active{% endif %}">
+            Properties
+            </a>
+
+            <a href="/bookings/" 
+            class="{% if '/bookings/' in request.path %}active{% endif %}">
+            Bookings
+            </a>
+
+            <a href="/payments/" 
+            class="{% if '/payments/' in request.path %}active{% endif %}">
+            Payments
+            </a>
+
+        {% else %}
+
+            <a href="{% url 'tenant_property_list' %}" 
+            class="{% if '/properties/browse/' in request.path %}active{% endif %}">
+            Browse Properties
+            </a>
+
+            <a href="/payments/" 
+            class="{% if '/payments/' in request.path %}active{% endif %}">
+            Payments
+            </a>
+
+        {% endif %}
+
+        <!-- Profile (Common) -->
+        <a href="/profile/" 
+        class="{% if '/profile/' in request.path or '/settings/' in request.path %}active{% endif %}">
+        Profile
+        </a>
+
+    </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- Top Bar -->
+        <div class="topbar">
+            <h3>
+                {% if request.user.userprofile.role == "owner" %}
+                    Owner Panel
+                {% else %}
+                    Tenant Panel
+                {% endif %}
+            </h3>
+
+            <div class="user-section">
+
+               <div class="notification-wrapper">
+
+                    <div class="notification-bell" onclick="toggleNotifications(event)">
+                        🔔
+                        {% if unread_count > 0 %}
+                        <span class="notification-count">
+                            {{ unread_count }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="notification-dropdown" id="notifDropdown">
+
+                        <div class="dropdown-header">
+                            <span>Notifications</span>
+                            <button onclick="markAllRead(event)" class="mark-read-btn">
+                                Mark all as read
+                            </button>
+                        </div>
+
+                        {% for notif in notifications %}
+                            <div class="notification-item {% if not notif.is_read %}unread{% endif %}">
+                                <div class="notif-message">
+                                    {{ notif.message }}
+                                </div>
+                                <div class="notif-time">
+                                    {{ notif.created_at|timesince }} ago
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="notification-item empty">
+                                No new notifications
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+               <div class="user-menu">
+
+                    <div class="user-trigger" onclick="toggleUserMenu(event)">
+
+                        <div class="avatar-circle">
+
+                            {% if request.user.userprofile and request.user.userprofile.profile_image %}
+                                <img src="{{ request.user.userprofile.profile_image.url }}"
+                                    alt="Profile">
+                            {% else %}
+                                <span>
+                                    {{ request.user.first_name|first|upper }}
+                                </span>
+                            {% endif %}
+                        
+                        </div>
+
+                        <span class="user-name">
+                            {{ request.user.first_name }}
+                        </span>
+
+                    </div>
+
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-user-name">
+                            {{ request.user.first_name }}
+                        </div>
+
+                        <a href="/profile/">View Profile</a>
+                        <a href="/settings/">Settings</a>
+
+                        <a href="{% url 'logout' %}" class="dropdown-logout">
+                            Logout
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- POPUP BLOCK (NEW ADDITION) -->
+        {% if messages and request.user.userprofile.role == "tenant" %}
+            {% for message in messages %}
+                <div class="popup-message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="content-area">
+            {% block dashboard_content %}
+            {% endblock %}
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const bell = document.querySelector(".notification-bell");
+const notifDropdown = document.getElementById("notifDropdown");
+const count = document.getElementById("notifCount");
+
+function toggleNotifications(event) {
+    event.stopPropagation();
+    notifDropdown.classList.toggle("active");
+
+    if (notifDropdown.classList.contains("active")) {
+
+        fetch("/notifications/read/")
+        .then(response => response.json())
+        .then(data => {
+
+            // Remove unread badge
+            if (count) {
+                count.remove();
+            }
+
+            // Remove unread highlight class
+            document.querySelectorAll(".notification-item.unread")
+                .forEach(item => item.classList.remove("unread"));
+        })
+        .catch(error => console.log("Notification error:", error));
+    }
+}
+
+function markAllRead(event) {
+    event.stopPropagation();
+
+    fetch("/notifications/read/")
+    .then(response => response.json())
+    .then(data => {
+
+        if (count) {
+            count.remove();
+        }
+
+        document.querySelectorAll(".notification-item.unread")
+            .forEach(item => item.classList.remove("unread"));
+    });
+}
+
+const userDropdown = document.getElementById("userDropdown");
+function toggleUserMenu(event) {
+    event.stopPropagation();
+    userDropdown.classList.toggle("active");
+}
+
+document.addEventListener("click", function(event) {
+
+    if (notifDropdown && bell &&
+        !notifDropdown.contains(event.target) &&
+        !bell.contains(event.target)) {
+        notifDropdown.classList.remove("active");
+    }
+
+    if (userDropdown &&
+        !userDropdown.contains(event.target)) {
+        userDropdown.classList.remove("active");
+    }
+});
+
+setTimeout(function() {
+    const popup = document.querySelector('.popup-message');
+    if (popup) popup.remove();
+}, 3000);
+
+</script>
+</body>
+</html>

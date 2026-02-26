@@ -1,0 +1,73 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block dashboard_content %}
+
+<div class="page-header">
+    <h1>{{ property.name }}</h1>
+
+    {% if property.city and property.state %}
+        <p>{{ property.city }}, {{ property.state }}</p>
+    {% endif %}
+</div>
+
+<section class="dashboard-section">
+    <h2 class="section-title">Rooms</h2>
+
+    <a href="{% url 'add_room' property.id %}" class="primary-btn">
+        + Add Room
+    </a>
+
+    <div class="room-grid">
+
+        {% for room in rooms %}
+            <div class="card">
+
+                {% if room.image %}
+                    <img src="{{ room.image.url }}" style="width:100%; height:180px; object-fit:cover;">
+                {% endif %}
+
+                <div class="card-content">
+                    <h3>Room {{ room.room_number }}</h3>
+                    <p>₹ {{ room.rent }}</p>
+                    
+                    <p>Capacity: {{ room.capacity }}</p>
+
+                    <!-- Seat Info -->
+                    <p>
+                        Seats: {{ room.confirmed }} / {{ room.capacity }}
+                    </p>
+
+                    {% if room.available_seats > 0 %}
+                        <p style="color:green;">
+                            {{ room.available_seats }} seats available
+                        </p>
+                    {% else %}
+                        <p style="color:red;">
+                            Room Full
+                        </p>
+                    {% endif %}
+
+                    <div class="room-actions">
+                        <a href="{% url 'edit_room' room.id %}" class="edit-btn">
+                            Edit
+                        </a>
+
+                        <form method="POST" action="{% url 'delete_room' room.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-btn"
+                                onclick="return confirm('Are you sure you want to delete this room?');">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+        {% empty %}
+            <p>No rooms added yet.</p>
+        {% endfor %}
+
+    </div>
+</section>
+
+{% endblock %}

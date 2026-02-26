@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>StayEase</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+{% if request.path == "/" %}
+<nav class="navbar">
+    <div class="nav-container">
+
+        <div class="logo">
+            <div class="logo-icon">S</div>
+            StayEase
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="#">Find a Stay</a></li>
+            <li><a href="#">Categories</a></li>
+            <li><a href="#">Dashboard</a></li>
+        </ul>
+
+        <div class="nav-buttons">
+            <a href="{% url 'login' %}" class="btn-outline">Login</a>
+            <a href="{% url 'signup' %}" class="btn-primary">Get Started</a>
+        </div>
+
+    </div>
+</nav>
+{% endif %}
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>

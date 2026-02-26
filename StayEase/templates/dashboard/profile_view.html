@@ -1,0 +1,131 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block dashboard_content %}
+
+<div class="profile-page-wrapper">
+
+    <!-- LEFT SIDE -->
+    <div class="profile-card-modern">
+
+        <div class="profile-header-modern">
+            <div class="profile-avatar-modern">
+
+                {% if profile.profile_image %}
+                    <img src="{{ profile.profile_image.url }}" 
+                        alt="Profile Image">
+                {% else %}
+                    <span class="avatar-letter-modern">
+                        {{ request.user.first_name|first|upper }}
+                    </span>
+                {% endif %}
+
+            </div>
+
+            <div>
+                <h2>{{ request.user.first_name }} {{ request.user.last_name }}</h2>
+                <span class="role-badge-modern">
+                    {{ request.user.userprofile.role|capfirst }}
+                </span>
+            </div>
+        </div>
+
+        <div class="profile-grid">
+            <div class="profile-item">
+                <label>Email</label>
+                <p>{{ request.user.email }}</p>
+            </div>
+
+            <div class="profile-item">
+                <label>Phone</label>
+                <p>{{ profile.phone|default:"Not Added" }}</p>
+            </div>
+
+            <div class="profile-item">
+                <label>Joined</label>
+                <p>{{ request.user.date_joined|date:"F d, Y" }}</p>
+            </div>
+        </div>
+
+        <div class="profile-action">
+            <a href="{% url 'settings' %}" class="edit-btn-modern">
+                Edit Profile
+            </a>
+        </div>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="account-summary-card">
+
+        <h3>Account Overview</h3>
+
+        {% if request.user.userprofile.role == "owner" %}
+
+            <div class="summary-item">
+                <span>Total Properties</span>
+                <strong>{{ total_properties|default:"0" }}</strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Active Listings</span>
+                <strong>{{ active_listings|default:"0" }}</strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Total Bookings</span>
+                <strong>{{ total_bookings|default:"0" }}</strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Pending Bookings</span>
+                <strong>{{ pending_bookings|default:"0" }}</strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Confirmed Bookings</span>
+                <strong>{{ confirmed_bookings|default:"0" }}</strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Total Rooms Occupancy</span>
+                <strong>{{ occupancy_rate|default:"0" }}%</strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Total Earnings</span>
+                <strong>₹{{ total_earnings|default:"0" }}</strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Total Security Collected</span>
+                <strong>₹{{ total_security|default:"0" }}</strong>
+            </div>
+
+        {% else %}
+
+            <div class="summary-item">
+                <span>Total Bookings</span>
+                <strong>{{ tenant_total_bookings|default:"0" }}</strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Pending Requests</span>
+                <strong>{{ tenant_pending|default:"0" }}</strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Confirmed Stays</span>
+                <strong>{{ tenant_confirmed|default:"0" }}</strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Total Rent Paid</span>
+                <strong>₹{{ tenant_total_paid|default:"0" }}</strong>
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

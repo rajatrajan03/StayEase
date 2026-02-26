@@ -1,0 +1,65 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block dashboard_content %}
+
+<div class="property-detail-wrapper">
+
+    <!-- Property Header -->
+    <div class="property-header">
+        <h1 class="property-title">{{ property.name }}</h1>
+        <p class="property-location">{{ property.location }}</p>
+    </div>
+
+    <!-- Rooms Section -->
+    <div class="rooms-section">
+        <h2 class="section-title">Available Rooms</h2>
+
+        <div class="room-grid">
+
+            {% for room in rooms %}
+            <div class="room-card">
+
+                {% if room.image %}
+                    <div class="room-image-wrapper">
+                        <img src="{{ room.image.url }}" 
+                            alt="Room Image"
+                            class="room-image">
+                    </div>
+                {% endif %}
+
+
+                <div class="room-card-top">
+                    <h3 class="room-title">Room {{ room.room_number }}</h3>
+                </div>
+
+                <div class="room-details">
+                    <p>Capacity: {{ room.capacity }}</p>
+                    <p>Available Seats: {{ room.available_seats }}</p>
+                    <p class="room-rent {% if room.available_seats > 0 %}rent-available{% else %}rent-full{% endif %}">
+                        ₹ {{ room.rent }}
+                    </p>
+                </div>
+
+                <div class="room-action">
+                    {% if room.available_seats > 0 %}
+                        <a class="book-btn"
+                        href="{% url 'room_detail' room.id %}">
+                        View Details
+                        </a>
+                    {% else %}
+                        <span class="fully-booked">
+                            Fully Booked
+                        </span>
+                    {% endif %}
+                </div>
+
+            </div>
+            {% empty %}
+                <p class="no-room-msg">No rooms available.</p>
+            {% endfor %}
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}
