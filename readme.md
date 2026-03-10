@@ -221,15 +221,6 @@ StayEase is a multi-app Django project organizing user accounts, property listin
 - A dashboard module for admin analytics and management UI.
 - A suite of tests across apps to validate core functionality.
 
-Notes on Limitations
---------------------
-- The repository description is minimal, and there is no explicit requirements.txt or license file in the provided snapshot. When working with this project in a team or open-source context, consider adding:
-  - A clear LICENSE (MIT, Apache-2.0, etc.)
-  - A requirements.txt or Pipfile.lock enumerating dependencies (Django, Pillow, etc.)
-  - A CONTRIBUTING.md with PR guidelines and testing requirements
-  - Documentation for environment variables (e.g., SECRET_KEY, DEBUG, ALLOWED_HOSTS)
-
-If you’d like, I can tailor this README further by pulling specific details from the code (for example, listing exact model names and key fields you want highlighted, or wiring a sample “Getting Started” workflow for your preferred environment).
 
 ---
 *Made with: [gittool.dev](https://gittool.dev)*
