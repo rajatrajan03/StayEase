@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 # SECURITY
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-change-this-in-vercel")
 DEBUG = os.getenv("DEBUG") == "True"
 ALLOWED_HOSTS = [
     host.strip()
@@ -114,7 +114,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Sites / Auth
-SITE_ID = 2
+SITE_ID = int(os.getenv("SITE_ID", "1"))
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
