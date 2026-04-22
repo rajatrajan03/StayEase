@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 {% load socialaccount %}
-
 <div class="auth-page">
     <div class="auth-logo">
         <div class="logo-icon">S</div>
@@ -68,16 +67,6 @@
             
         </form>
 
-        <div class="auth-divider">
-            OR SIGN UP WITH
-        </div>
-
-
-        <div class="social">
-            <a href="{% provider_login_url 'google' %}" class="social-btn">
-                Google
-            </a>
-        </div>
 
 
         <p class="login-link">
