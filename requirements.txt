@@ -1,1 +1,5 @@
--r StayEase/requirements.txt
+Django==6.0.2
+django-allauth==65.14.3
+python-dotenv==1.2.2
+Pillow==12.1.1
+reportlab==4.4.10
