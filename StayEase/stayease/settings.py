@@ -4,6 +4,7 @@ Django settings for stayease project.
 
 from pathlib import Path
 import os
+import shutil
 from dotenv import load_dotenv
 import dj_database_url
 
@@ -98,10 +99,19 @@ if DATABASE_URL:
         )
     }
 else:
+    sqlite_path = BASE_DIR / 'db.sqlite3'
+
+    if os.getenv("VERCEL") == "1":
+        # Vercel's /var/task is read-only; keep a writable runtime copy in /tmp.
+        tmp_sqlite_path = Path("/tmp") / "db.sqlite3"
+        if sqlite_path.exists() and not tmp_sqlite_path.exists():
+            shutil.copy2(sqlite_path, tmp_sqlite_path)
+        sqlite_path = tmp_sqlite_path
+
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'NAME': sqlite_path,
         }
     }
 
