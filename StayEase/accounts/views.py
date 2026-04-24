@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
+from django.db import transaction, DatabaseError
 from django.utils.timezone import now
 from django.core.mail import send_mail
 from django.conf import settings
@@ -36,19 +37,29 @@ def signup(request):
             messages.error(request, "You must agree to Terms & Privacy Policy")
             return render(request, "accounts/signup.html")
 
-        user = User.objects.create_user(
-            username=email,
-            email=email,
-            password=password,
-            first_name=full_name
-        )
+        try:
+            with transaction.atomic():
+                user = User.objects.create_user(
+                    username=email,
+                    email=email,
+                    password=password,
+                    first_name=full_name
+                )
 
-        UserProfile.objects.create(
-            user=user,
-            phone=phone,
-            role=role
-        )
+                UserProfile.objects.create(
+                    user=user,
+                    phone=phone,
+                    role=role
+                )
+        except DatabaseError:
+            messages.error(request, "Signup is temporarily unavailable. Please try again in a minute.")
+            return render(request, "accounts/signup.html")
+
         user = authenticate(request, username=email, password=password)
+        if user is None:
+            messages.success(request, "Account created successfully. Please log in.")
+            return redirect("login")
+
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
         return redirect("dashboard")
     return render(request, "accounts/signup.html")
