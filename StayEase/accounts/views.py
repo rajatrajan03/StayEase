@@ -24,11 +24,11 @@ def signup(request):
     if request.method == "POST":
         full_name = request.POST.get("full_name")
         phone = request.POST.get("phone")
-        email = request.POST.get("email")
+        email = (request.POST.get("email") or "").strip().lower()
         password = request.POST.get("password")
         role = request.POST.get("role") or "tenant"
 
-        if User.objects.filter(email=email).exists():
+        if User.objects.filter(email__iexact=email).exists():
             messages.error(request, "Email already exists")
             return render(request, "accounts/signup.html")
         
@@ -56,10 +56,20 @@ def signup(request):
 # LOGIN
 def login_view(request):
     if request.method == "POST":
-        email = request.POST.get("email")
-        password = request.POST.get("password")
+        email = (request.POST.get("email") or "").strip().lower()
+        password = (request.POST.get("password") or "").strip()
+
+        if not email or not password:
+            messages.error(request, "Please enter both email and password")
+            return render(request, "accounts/login.html")
 
         user = authenticate(request, username=email, password=password)
+
+        if user is None:
+            # Fallback: if username is not exactly the email string, resolve by email first.
+            existing_user = User.objects.filter(email__iexact=email).first()
+            if existing_user:
+                user = authenticate(request, username=existing_user.username, password=password)
 
         if user is not None:
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
